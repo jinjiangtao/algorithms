@@ -246,3 +246,75 @@ func printTree(node *TreeNode, level int) {
 		printTree(node.Left, level+1)
 	}
 }
+
+// 二叉树的中序遍历递归写法
+func InorderTraversal(node *TreeNode) []int {
+	result := make([]int, 0)
+	var inorder func(node *TreeNode)
+
+	inorder = func(node *TreeNode) {
+		if node == nil {
+			return
+		}
+		inorder(node.Left)
+		result = append(result, node.Value)
+		inorder(node.Right)
+	}
+
+	return result
+}
+
+// 二叉树的中序遍历，非递归写法
+// 先遍历左边节点
+// 再遍历右边节点
+// 利用strack 结构存放当前数据
+func InorderTraversalStack(node *TreeNode) []int {
+	result := make([]int, 0)
+	strackNode := make([]*TreeNode, 0)
+	curNode := node
+
+	for curNode != nil || len(strackNode) > 0 {
+
+		for curNode != nil {
+			strackNode = append(strackNode, curNode)
+			curNode = curNode.Left
+		}
+
+		curNode = strackNode[len(strackNode)-1]
+		strackNode = strackNode[:len(strackNode)-1]
+		result = append(result, curNode.Value)
+
+		curNode = curNode.Right
+	}
+
+	return result
+}
+
+// 二叉树的广度遍历BFS
+func LevelOrderTraversal(root *TreeNode) []int {
+
+	result := make([]int, 0)
+	if root == nil {
+		return result
+	}
+
+	queue := make([]TreeNode, 0)
+	queue = append(queue, *root)
+
+	if len(queue) > 0 {
+		cur := queue[0]
+		queue = queue[1:]
+
+		result = append(result, cur.Value)
+
+		if cur.Left != nil {
+			queue = append(queue, *cur.Left)
+		}
+
+		if cur.Right != nil {
+			queue = append(queue, *cur.Right)
+		}
+	}
+
+	return result
+}
